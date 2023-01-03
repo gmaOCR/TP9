@@ -1,0 +1,6 @@
+{% load static %}
+    {% if ticket.image %}
+         <img src="{{ ticket.image.url }}">
+    {% else %}
+         <img src = "{% static 'no-image-icon-23485.png' %}">
+    {% endif %}

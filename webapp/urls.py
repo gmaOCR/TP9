@@ -24,13 +24,12 @@ urlpatterns = [
          name='password_change_done'
          ),
     path('signup/', authentication.views.signup_page, name='signup'),
-    # path('profile-photo/upload', authentication.views.upload_profile_photo,
-    #      name='upload_profile_photo'),
     path('home/', ticket.views.home, name='home'),
     path('ticket/<int:ticket_id>', ticket.views.view_ticket,
          name='view_ticket'),
     path('ticket/create/', ticket.views.create_ticket,
          name='create_ticket'),
+    path('ticket/<int:ticket_id>/edit', ticket.views.edit_ticket, name='edit_ticket'),
 ]
 
 if settings.DEBUG:

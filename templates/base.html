@@ -10,7 +10,7 @@
             {% if user.is_authenticated %}
                 <p>Salut, {{ user }} !</p>
                 <p><a href="{% url 'home' %}">Accueil</a></p>
-                <p><a href="{% url 'create_ticket' %}">Créer une critique</a></p>
+                <p><a href="{% url 'create_ticket' %}">Créer un ticket</a></p>
                 <p><a href="{% url 'password_change' %}">Changer le mot de passe</a></p>
                 <p><a href="{% url 'logout' %}">Se déconnecter</a></p>
             {% endif %}

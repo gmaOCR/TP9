@@ -29,6 +29,30 @@ def create_ticket(request):
     return render(request, 'ticket/create_ticket_post.html', context=context)
 
 @login_required
+@permission_required('ticket.view_ticket', raise_exception=True)
 def view_ticket(request, ticket_id):
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
     return render(request, 'ticket/view_ticket.html', {'ticket': ticket})
+
+@login_required
+@permission_required('ticket.change_ticket', raise_exception=True)
+def edit_ticket(request, ticket_id):
+    ticket = get_object_or_404(models.Ticket, id=ticket_id)
+    edit_form = forms.TicketForm(instance=ticket)
+    delete_form = forms.DeleteTicketForm()
+    if request.method == 'POST':
+        if 'edit_ticket' in request.POST:
+            edit_form = forms.TicketForm(request.POST, instance=ticket)
+            if edit_form.is_valid():
+                edit_form.save()
+                return redirect('home')
+        if 'delete_ticket' in request.POST:
+            delete_form = forms.DeleteTicketForm(request.POST)
+            if delete_form.is_valid():
+                ticket.delete()
+                return redirect('home')
+    context = {
+        'edit_form': edit_form,
+        'delete_form': delete_form,
+    }
+    return render(request, 'ticket/edit_ticket.html', context=context)
