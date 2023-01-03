@@ -1,5 +1,5 @@
 from itertools import chain
-
+from django.db import models
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.forms import formset_factory
@@ -42,7 +42,7 @@ def edit_ticket(request, ticket_id):
     delete_form = forms.DeleteTicketForm()
     if request.method == 'POST':
         if 'edit_ticket' in request.POST:
-            edit_form = forms.TicketForm(request.POST, instance=ticket)
+            edit_form = forms.TicketForm(request.POST, instance=ticket, files=request.FILES)
             if edit_form.is_valid():
                 edit_form.save()
                 return redirect('home')
@@ -56,3 +56,5 @@ def edit_ticket(request, ticket_id):
         'delete_form': delete_form,
     }
     return render(request, 'ticket/edit_ticket.html', context=context)
+
+
