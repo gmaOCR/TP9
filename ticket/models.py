@@ -25,28 +25,8 @@ class Ticket(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        self.resize_image()
-
-# def delete_image(self, *args, **kwargs):
-#     self.image.delete()
-#     super(Ticket, self).delete(*args, **kwargs)
-#
-# def delete(self):
-#     image = Ticket.objects.filter(product=self)
-#     self.image.delete()
-#     super(Ticket, self).delete()
-
-# def _delete_file(path):
-#    """ Deletes file from filesystem. """
-#    if os.path.isfile(path):
-#        os.remove(path)
-#
-# @receiver(pre_delete, sender=Ticket)
-# def delete_file(sender, instance, *args, **kwargs):
-#     """ Deletes image  files on `post_delete` """
-#     if instance.image:
-#         _delete_file(instance.image.path)
-
+        if self.image:
+            self.resize_image()
 
 class Review(models.Model):
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
