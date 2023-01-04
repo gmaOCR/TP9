@@ -6,7 +6,7 @@
         {% for ticket in tickets %}
             <div class="post">
                 <a href="{% url 'view_ticket' ticket.id %}">
-                    <h4>Critique : {{ ticket.title }}</h4>
+                    <h4>Ticket : {{ ticket.title }}</h4>
                     <p>{% include "./ticket_img.html" %}</p>
                 </a>
             </div>
