@@ -1,9 +1,9 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from django.db import models
-from PIL import Image
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
+from PIL import Image
 
 # from django.db.models.signals import post_delete
 
@@ -33,8 +33,8 @@ class Review(models.Model):
     rating = models.PositiveSmallIntegerField(
         # validates that rating must be between 0 and 5
         validators=[MinValueValidator(0), MaxValueValidator(5)])
-    headline = models.CharField(max_length=128)
-    body = models.CharField(max_length=8192, blank=True)
+    headline = models.CharField(verbose_name='Titre', max_length=128)
+    body = models.TextField(max_length=8192, blank=True, verbose_name="Commentaire")
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
@@ -49,8 +49,6 @@ class UserFollows(models.Model):
         related_name='followed_by')
 
     class Meta:
-        pass
         # ensures we don't get multiple UserFollows instances
         # for unique user-user_followed pairs
-
         unique_together = ('user', 'followed_user', )
