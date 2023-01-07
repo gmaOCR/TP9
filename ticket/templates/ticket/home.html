@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Votre flux</h2>
-    <h3>Ticket sans critique</h3>
 {% if perms.ticket.view_ticket %}
     <div class="grid-container">
         {% for ticket in tickets %}
@@ -10,6 +9,9 @@
                     <h4>Ticket : {{ ticket.title }}</h4>
                     <p>{% include "./ticket_img.html" %}</p>
                 </a>
+                <p>{% for i in ticket.review_set.all %}</p>
+                <p>Reviews: {{ i.headline }} {{ i.body }}</p>
+                {% endfor %}
             </div>
         {% endfor %}
     </div>
