@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Votre flux</h2>
+    <h3>Ticket sans critique</h3>
 {% if perms.ticket.view_ticket %}
     <div class="grid-container">
         {% for ticket in tickets %}
