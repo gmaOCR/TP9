@@ -11,7 +11,12 @@ from . import forms, models
 @login_required
 def home(request):
     tickets = models.Ticket.objects.all()
-    return render(request, 'ticket/home.html',  context={'tickets': tickets})
+    reviews = models.Review.objects.all()
+    context = {
+        'tickets': tickets,
+        'reviews': reviews
+    }
+    return render(request, 'ticket/home.html',  context=context)
 
 @login_required
 def create_ticket(request):
@@ -57,27 +62,49 @@ def edit_ticket(request, ticket_id):
     }
     return render(request, 'ticket/edit_ticket.html', context=context)
 
-
 @login_required
-def create_review_and_ticket(request, ticket_id):
+# @permission_required
+def create_review_and_ticket(request):
     review_form = forms.ReviewForm()
     ticket_form = forms.TicketForm()
     if request.method == 'POST':
         review_form = forms.ReviewForm(request.POST)
-        if ticket_id:
-            ticket = models.Ticket(instance=ticket_id)
-            ticket_form = forms.TicketForm(request.GET, instance=ticket)
-        else: ticket_form = forms.TicketForm(request.POST)
-        if review_form.is_valid() and ticket_form.is_valid():
+        ticket_form = forms.TicketForm(request.POST, files=request.FILES)
+        if review_form.is_valid() or ticket_form.is_valid():
+            ticket = ticket_form.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
             review = review_form.save(commit=False)
+            review.ticket = ticket
             review.user = request.user
             review.save()
-            ticket = ticket_form.save(commit=False)
-            ticket.user =request.user
-            ticket.save()
             return redirect('home')
     context = {
         'review_form': review_form,
         'ticket_form': ticket_form,
     }
     return render(request, 'ticket/create_review.html', context=context)
+
+# @login_required
+# def create_review_and_ticket(request, ticket_id):
+#     review_form = forms.ReviewForm()
+#     ticket_form = forms.TicketForm()
+#     if request.method == 'POST':
+#         review_form = forms.ReviewForm(request.POST)
+#         if ticket_id:
+#             ticket = models.Ticket(instance=ticket_id)
+#             ticket_form = forms.TicketForm(request.GET, instance=ticket)
+#         else: ticket_form = forms.TicketForm(request.POST)
+#         if review_form.is_valid() and ticket_form.is_valid():
+#             review = review_form.save(commit=False)
+#             review.user = request.user
+#             review.save()
+#             ticket = ticket_form.save(commit=False)
+#             ticket.user =request.user
+#             ticket.save()
+#             return redirect('home')
+#     context = {
+#         'review_form': review_form,
+#         'ticket_form': ticket_form,
+#     }
+#     return render(request, 'ticket/create_review.html', context=context)
