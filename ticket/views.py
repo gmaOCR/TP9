@@ -25,7 +25,7 @@ def create_ticket(request):
         ticket_form = forms.TicketForm(request.POST, request.FILES)
         if ticket_form.is_valid():
             ticket = ticket_form.save(commit=False)
-            ticket.user =request.user
+            ticket.user = request.user
             ticket.save()
             return redirect('home')
     context = {
@@ -85,26 +85,41 @@ def create_review_and_ticket(request):
     }
     return render(request, 'ticket/create_review.html', context=context)
 
-# @login_required
-# def create_review_and_ticket(request, ticket_id):
-#     review_form = forms.ReviewForm()
-#     ticket_form = forms.TicketForm()
-#     if request.method == 'POST':
-#         review_form = forms.ReviewForm(request.POST)
-#         if ticket_id:
-#             ticket = models.Ticket(instance=ticket_id)
-#             ticket_form = forms.TicketForm(request.GET, instance=ticket)
-#         else: ticket_form = forms.TicketForm(request.POST)
-#         if review_form.is_valid() and ticket_form.is_valid():
-#             review = review_form.save(commit=False)
-#             review.user = request.user
-#             review.save()
-#             ticket = ticket_form.save(commit=False)
-#             ticket.user =request.user
-#             ticket.save()
-#             return redirect('home')
-#     context = {
-#         'review_form': review_form,
-#         'ticket_form': ticket_form,
-#     }
-#     return render(request, 'ticket/create_review.html', context=context)
+@login_required
+def create_review(request, ticket=None):
+    review_form = forms.ReviewForm()
+    if request.method == 'POST':
+        review_form = forms.ReviewForm(request.POST)
+        if review_form.is_valid():
+            review = review_form.save(commit=False)
+            review.ticket = ticket
+            review.user = request.user
+            review.save()
+            return redirect('home')
+    context = {
+        'review_form': review_form,
+    }
+    return render(request, 'ticket/create_review_test.html', context=context)
+
+@login_required
+# @permission_required('ticket.change_review', raise_exception=True)
+def edit_review(request, review_id):
+    review = get_object_or_404(models.Review, id=review_id)
+    edit_form = forms.ReviewForm(instance=review)
+    delete_form = forms.DeleteReviewForm()
+    if request.method == 'POST':
+        if 'edit_review' in request.POST:
+            edit_form = forms.ReviewForm(request.POST, instance=review, files=request.FILES)
+            if edit_form.is_valid():
+                edit_form.save()
+                return redirect('home')
+        if 'delete_review' in request.POST:
+            delete_form = forms.DeleteReviewForm(request.POST)
+            if delete_form.is_valid():
+                review.delete()
+                return redirect('home')
+    context = {
+        'edit_form': edit_form,
+        'delete_form': delete_form,
+    }
+    return render(request, 'ticket/edit_review.html', context=context)
