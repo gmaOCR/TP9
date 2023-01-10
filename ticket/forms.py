@@ -26,6 +26,6 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = models.Review
         fields = ['headline','rating','body']
-        # widgets = {
-        #     'rating': forms.RadioSelect(attrs={'choices': CHOICES})
-        # }
+
+class DeleteReviewForm(forms.Form):
+    delete_review = forms.BooleanField(widget=forms.HiddenInput, initial=True)
