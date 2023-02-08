@@ -6,12 +6,13 @@
         {% for ticket in tickets %}
             <div class="post">
                 <a href="{% url 'view_ticket' ticket.id %}">
-                    <h4>Ticket : {{ ticket.title }}</h4></a>
+                    <h4>Ticket : {{ ticket.title }}</h4>
+                </a>
                     <p>{% include "./ticket_img.html" %}</p>
-                    <p><a href="{% url 'create_review'%}">[Ajouter une critique]</a></p>
+                    <p><a href="{% url 'create_review' ticket.id %}">[Ajouter une critique]</a></p>
                 {% for review in ticket.review_set.all %}
                     <p>Titre critique: {{ review.headline }} - Note: {{ review.rating }} *
-                    <a href="{% url 'edit_review' review.id %}">[modifier]</a></p>
+                    <a href="{% url 'edit_review' review.id %}">[Modifier]</a></p>
                     <p>Critique: {{ review.body }}</p>
                 {% endfor %}
             </div>

@@ -1,5 +1,8 @@
 from django import forms
 from . import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 CHOICES = (
     ("1",1),
@@ -29,3 +32,11 @@ class ReviewForm(forms.ModelForm):
 
 class DeleteReviewForm(forms.Form):
     delete_review = forms.BooleanField(widget=forms.HiddenInput, initial=True)
+
+class FollowedUsersForm(forms.ModelForm):
+    class Meta:
+        model = models.UserFollows
+        fields = ['user', 'followed_user']
+
+
+

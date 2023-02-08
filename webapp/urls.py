@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import (
     LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView)
-from django.urls import path
+from django.urls import include, path
 
 import authentication.views
 import ticket.views
@@ -32,7 +32,8 @@ urlpatterns = [
     path('ticket/<int:ticket_id>/edit', ticket.views.edit_ticket, name='edit_ticket'),
     path('ticket_and_review/create/', ticket.views.create_review_and_ticket, name='create_ticket_and_review'),
     path('review/<int:review_id>/edit', ticket.views.edit_review, name='edit_review'),
-    path('review/create/', ticket.views.create_review, name='create_review'),
+    path('ticket/<int:ticket_id>/review/create/', ticket.views.create_review, name='create_review'),
+    path('ticket/followed-users/', ticket.views.view_followed_users, name='followed_users')
 ]
 
 if settings.DEBUG:

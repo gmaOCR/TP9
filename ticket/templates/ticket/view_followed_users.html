@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <h2>Abonnements</h2>
+        {% for user_f in users_f %}
+            <a href="{% url 'view_followed_users' user_f.id %}">
+        {% endfor %}
+{% endblock content %}
