@@ -34,6 +34,7 @@ urlpatterns = [
     path('review/<int:review_id>/edit', ticket.views.edit_review, name='edit_review'),
     path('ticket/<int:ticket_id>/review/create/', ticket.views.create_review, name='create_review'),
     path('ticket/followed-users/', ticket.views.view_followed_users, name='followed_users')
+
 ]
 
 if settings.DEBUG:

@@ -34,13 +34,13 @@ def create_ticket(request):
     return render(request, 'ticket/create_ticket_post.html', context=context)
 
 @login_required
-@permission_required('ticket.view_ticket', raise_exception=True)
+# @permission_required('ticket.view_ticket', raise_exception=True)
 def view_ticket(request, ticket_id):
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
     return render(request, 'ticket/view_ticket.html', {'ticket': ticket})
 
 @login_required
-@permission_required('ticket.change_ticket', raise_exception=True)
+# @permission_required('ticket.change_ticket', raise_exception=True)
 def edit_ticket(request, ticket_id):
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
     edit_form = forms.TicketForm(instance=ticket)
@@ -125,23 +125,31 @@ def edit_review(request, review_id):
     }
     return render(request, 'ticket/edit_review.html', context=context)
 
-@login_required
-def followed_users(request):
-    form = forms.FollowedUsersForm(instance=request.user)
-    if request.method == 'POST':
-        form = forms.FollowedUsersForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    return render(request, 'ticket/follow_users_form.html', context={'form': form})
+# @login_required
+# def followed_users(request):
+#     form = forms.FollowedUsersForm(instance=request.user)
+#     if request.method == 'POST':
+#         form = forms.FollowedUsersForm(request.POST, instance=request.user)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('home')
+#     return render(request, 'ticket/follow_users_form.html', context={'form': form})
 
 @login_required
 def view_followed_users(request):
     users_followed = models.UserFollows.objects.all()
+    form = forms.AddUserToFollow(user=request.user)
+    if request.method == 'POST':
+        form = forms.AddUserToFollow(request.POST, instance=request.user)
+        if models.UserFollows.objects.filter(user=request.user, followed_user_id=form.user.id).exists():
+            form.save()
+            return redirect('home')
     context = {
         'users_f': users_followed,
+        'form': form,
     }
     return render(request, 'ticket/view_followed_users.html', context=context)
+
 
 
 

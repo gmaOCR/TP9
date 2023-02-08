@@ -33,6 +33,11 @@ class ReviewForm(forms.ModelForm):
 class DeleteReviewForm(forms.Form):
     delete_review = forms.BooleanField(widget=forms.HiddenInput, initial=True)
 
+class AddUserToFollow(forms.Form):
+    add_user = forms.CharField(label='Suivre un utilisateur')
+    user = User
+
+
 class FollowedUsersForm(forms.ModelForm):
     class Meta:
         model = models.UserFollows
