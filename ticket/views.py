@@ -5,8 +5,12 @@ from django.core.paginator import Paginator
 from django.forms import formset_factory
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.contrib.auth import get_user_model
 
 from . import forms, models
+
+User = get_user_model()
 
 @login_required
 def home(request):
@@ -34,13 +38,11 @@ def create_ticket(request):
     return render(request, 'ticket/create_ticket_post.html', context=context)
 
 @login_required
-# @permission_required('ticket.view_ticket', raise_exception=True)
 def view_ticket(request, ticket_id):
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
     return render(request, 'ticket/view_ticket.html', {'ticket': ticket})
 
 @login_required
-# @permission_required('ticket.change_ticket', raise_exception=True)
 def edit_ticket(request, ticket_id):
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
     edit_form = forms.TicketForm(instance=ticket)
@@ -63,7 +65,6 @@ def edit_ticket(request, ticket_id):
     return render(request, 'ticket/edit_ticket.html', context=context)
 
 @login_required
-# @permission_required
 def create_review_and_ticket(request):
     review_form = forms.ReviewForm()
     ticket_form = forms.TicketForm()
@@ -103,7 +104,6 @@ def create_review(request, ticket_id):
     return render(request, 'ticket/create_review.html', context=context)
 
 @login_required
-# @permission_required('ticket.change_review', raise_exception=True)
 def edit_review(request, review_id):
     review = get_object_or_404(models.Review, id=review_id)
     edit_form = forms.ReviewForm(instance=review)
@@ -125,30 +125,36 @@ def edit_review(request, review_id):
     }
     return render(request, 'ticket/edit_review.html', context=context)
 
-# @login_required
-# def followed_users(request):
-#     form = forms.FollowedUsersForm(instance=request.user)
-#     if request.method == 'POST':
-#         form = forms.FollowedUsersForm(request.POST, instance=request.user)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('home')
-#     return render(request, 'ticket/follow_users_form.html', context={'form': form})
-
 @login_required
-def view_followed_users(request):
-    users_followed = models.UserFollows.objects.all()
-    form = forms.AddUserToFollow(user=request.user)
+def follow_index(request):
+    followed_users = User.objects.filter(followed_by__user=request.user)
+    followed_by = User.objects.filter(following__followed_user=request.user)
     if request.method == 'POST':
-        form = forms.AddUserToFollow(request.POST, instance=request.user)
-        if models.UserFollows.objects.filter(user=request.user, followed_user_id=form.user.id).exists():
+        form = forms.AddUserToFollow(
+            data= request.POST, initial={'user': request.user}
+                         )
+        if form.is_valid():
             form.save()
             return redirect('home')
+    else:
+        form = forms.AddUserToFollow(initial={'user': request.user})
+        delete_form = forms.DeleteForm()
+        if delete_form.is_valid():
+            if request.user.follows.filter(id=followed_users.id).exists():
+                request.user.follows.remove(followed_users.id)
+                followed_users.id.followed_by.remove(request.user)
+                return redirect('ticket/view_follow_users.html')
     context = {
-        'users_f': users_followed,
         'form': form,
+        'followed_users': followed_users,
+        'followed_by': followed_by,
+        'delete_user': delete_form,
     }
-    return render(request, 'ticket/view_followed_users.html', context=context)
+    return render(request, 'ticket/view_follow_users.html', context=context)
+
+
+
+
 
 
 

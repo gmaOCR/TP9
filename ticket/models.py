@@ -5,8 +5,6 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from PIL import Image
 
-# from django.db.models.signals import post_delete
-
 
 class Ticket(models.Model):
     title = models.CharField(max_length=128)
