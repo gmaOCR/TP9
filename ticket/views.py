@@ -138,19 +138,21 @@ def follow_index(request):
             return redirect('home')
     else:
         form = forms.AddUserToFollow(initial={'user': request.user})
-        delete_form = forms.DeleteForm()
-        if delete_form.is_valid():
-            if request.user.follows.filter(id=followed_users.id).exists():
-                request.user.follows.remove(followed_users.id)
-                followed_users.id.followed_by.remove(request.user)
-                return redirect('ticket/view_follow_users.html')
     context = {
         'form': form,
         'followed_users': followed_users,
         'followed_by': followed_by,
-        'delete_user': delete_form,
     }
     return render(request, 'ticket/view_follow_users.html', context=context)
+
+@login_required
+def unfollow(request, followed_user):
+    delete_form = forms.DeleteForm(request.POST)
+    if delete_form.is_valid():
+        userfollow_to_delete = get_object_or_404(UserFollows,user=request.user,followed_user_id=followed_user)
+        if userfollow_to_delete.exists():
+            userfollow_to_delete.remove()
+        return redirect('ticket/view_follow_users.html')
 
 
 
