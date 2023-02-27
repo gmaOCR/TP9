@@ -46,7 +46,7 @@ def view_ticket(request, ticket_id):
 def edit_ticket(request, ticket_id):
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
     edit_form = forms.TicketForm(instance=ticket)
-    delete_form = forms.DeleteTicketForm()
+    delete_form = forms.DeleteForm()
     if request.method == 'POST':
         if 'edit_ticket' in request.POST:
             edit_form = forms.TicketForm(request.POST, instance=ticket, files=request.FILES)
@@ -54,7 +54,8 @@ def edit_ticket(request, ticket_id):
                 edit_form.save()
                 return redirect('home')
         if 'delete_ticket' in request.POST:
-            delete_form = forms.DeleteTicketForm(request.POST)
+            # delete_form = forms.DeleteTicketForm(request.POST)
+            delete_form = forms.DeleteForm(request.POST)
             if delete_form.is_valid():
                 ticket.delete()
                 return redirect('home')
@@ -107,7 +108,8 @@ def create_review(request, ticket_id):
 def edit_review(request, review_id):
     review = get_object_or_404(models.Review, id=review_id)
     edit_form = forms.ReviewForm(instance=review)
-    delete_form = forms.DeleteReviewForm()
+    delete_form = forms.DeleteForm()
+    # delete_form = forms.DeleteReviewForm()
     if request.method == 'POST':
         if 'edit_review' in request.POST:
             edit_form = forms.ReviewForm(request.POST, instance=review, files=request.FILES)
@@ -115,7 +117,8 @@ def edit_review(request, review_id):
                 edit_form.save()
                 return redirect('home')
         if 'delete_review' in request.POST:
-            delete_form = forms.DeleteReviewForm(request.POST)
+            # delete_form = forms.DeleteReviewForm(request.POST)
+            delete_form = forms.DeleteForm(request.POST)
             if delete_form.is_valid():
                 review.delete()
                 return redirect('home')
@@ -148,8 +151,10 @@ def follow_index(request):
 @login_required
 def unfollow(request, followed_user_id):
     delete_form = forms.DeleteForm(request.POST)
+    # if request.method == 'POST':
+    #     if 'unfollow_user' in request.POST:
     if delete_form.is_valid():
-        userfollow_to_delete = get_object_or_404(UserFollows,user=request.user,followed_user=followed_user_id)
+        userfollow_to_delete = get_object_or_404(models.UserFollows,user=request.user,followed_user=followed_user_id)
         if userfollow_to_delete.exists():
             userfollow_to_delete.delete()
             return redirect('ticket/view_follow_users.html')

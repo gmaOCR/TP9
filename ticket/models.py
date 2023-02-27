@@ -22,9 +22,9 @@ class Ticket(models.Model):
         image.save(self.image.path)
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         if self.image:
             self.resize_image()
+        super().save(*args, **kwargs)
 
 class Review(models.Model):
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)

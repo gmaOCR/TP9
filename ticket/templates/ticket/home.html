@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Votre flux</h2>
-{% if perms.ticket.view_ticket %}
     <div class="grid-container">
         {% for ticket in tickets %}
             <div class="post">
                 <a href="{% url 'view_ticket' ticket.id %}">
                     <h4>Ticket : {{ ticket.title }}</h4>
+                <a href="{% url 'edit_ticket' ticket.id %}">[Modifier]</a></p>
                 </a>
                     <p>{% include "./ticket_img.html" %}</p>
                     <p><a href="{% url 'create_review' ticket.id %}">[Ajouter une critique]</a></p>
@@ -18,5 +18,4 @@
             </div>
         {% endfor %}
     </div>
-{% endif %}
 {% endblock content %}
