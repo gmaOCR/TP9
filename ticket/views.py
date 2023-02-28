@@ -53,7 +53,7 @@ def edit_ticket(request, ticket_id):
             if edit_form.is_valid():
                 edit_form.save()
                 return redirect('home')
-        if 'delete_ticket' in request.POST:
+        if 'delete' in request.POST:
             # delete_form = forms.DeleteTicketForm(request.POST)
             delete_form = forms.DeleteForm(request.POST)
             if delete_form.is_valid():
@@ -116,7 +116,7 @@ def edit_review(request, review_id):
             if edit_form.is_valid():
                 edit_form.save()
                 return redirect('home')
-        if 'delete_review' in request.POST:
+        if 'delete' in request.POST:
             # delete_form = forms.DeleteReviewForm(request.POST)
             delete_form = forms.DeleteForm(request.POST)
             if delete_form.is_valid():
@@ -149,17 +149,16 @@ def follow_index(request):
     return render(request, 'ticket/view_follow_users.html', context=context)
 
 @login_required
-def unfollow(request, followed_user_id):
-    delete_form = forms.DeleteForm(request.POST)
-    # if request.method == 'POST':
-    #     if 'unfollow_user' in request.POST:
-    if delete_form.is_valid():
-        userfollow_to_delete = get_object_or_404(models.UserFollows,user=request.user,followed_user=followed_user_id)
-        if userfollow_to_delete.exists():
-            userfollow_to_delete.delete()
-            return redirect('ticket/view_follow_users.html')
-        return redirect('home')
-
+def unfollow(request, user_id):
+    if request.method == 'POST':
+        delete_form = forms.DeleteForm(request.POST)
+        if delete_form.is_valid():
+            userfollow_to_delete = get_object_or_404(models.UserFollows, user=request.user,
+                                                     followed_user=user_id)
+            if userfollow_to_delete.exists():
+                userfollow_to_delete.delete()
+                return redirect('ticket/view_follow_users.html')
+            return redirect('home')
 
 
 
