@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>Votre flux</h2>
+        <p><form action="{% url 'create_ticket' %}" method="get">
+    <button type="submit">Demander une critique</button></form></p>
+    <p><form action="{% url 'create_ticket_and_review' %}" method="get">
+    <button type="submit">Créer une critique</button></form></p>
     <div class="grid-container">
+
+
         {% for ticket in tickets %}
             <div class="post">
                 <a href="{% url 'view_ticket' ticket.id %}"></a>
@@ -18,3 +24,4 @@
         {% endfor %}
     </div>
 {% endblock content %}
+

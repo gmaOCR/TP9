@@ -10,8 +10,7 @@
 <h2>Liste des utilisateurs suivis</h2>
     {% for user in followed_users %}
         <li>{{ user.username }}
-        <form action="{% url 'unfollow_user' user.id %}" method="post" enctype="multipart/form-data">
-            {{ delete.as_p }}
+        <form action="{% url 'unfollow_user' user.id %}" method="post">
             {% csrf_token %}
             <button type="submit" >Désabonner</button>
         </form>

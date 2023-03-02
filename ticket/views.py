@@ -1,13 +1,14 @@
 from itertools import chain
 from django.db import models
-from django.contrib.auth.decorators import login_required, permission_required
-from django.core.paginator import Paginator
-from django.forms import formset_factory
+from django.contrib.auth.decorators import login_required
+# from django.core.paginator import Paginator
 from django.db.models import Q
+# from django.forms import formset_factory
+from django.db.models import CharField, Value
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.views.decorators.http import require_POST
+# from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
-
 from . import forms, models
 
 User = get_user_model()
@@ -109,7 +110,6 @@ def edit_review(request, review_id):
     review = get_object_or_404(models.Review, id=review_id)
     edit_form = forms.ReviewForm(instance=review)
     delete_form = forms.DeleteForm()
-    # delete_form = forms.DeleteReviewForm()
     if request.method == 'POST':
         if 'edit_review' in request.POST:
             edit_form = forms.ReviewForm(request.POST, instance=review, files=request.FILES)
@@ -117,7 +117,6 @@ def edit_review(request, review_id):
                 edit_form.save()
                 return redirect('home')
         if 'delete' in request.POST:
-            # delete_form = forms.DeleteReviewForm(request.POST)
             delete_form = forms.DeleteForm(request.POST)
             if delete_form.is_valid():
                 review.delete()
@@ -149,21 +148,39 @@ def follow_index(request):
     return render(request, 'ticket/view_follow_users.html', context=context)
 
 @login_required
+@require_POST
 def unfollow(request, user_id):
     if request.method == 'POST':
-        delete_form = forms.DeleteForm(request.POST)
-        if delete_form.is_valid():
-            userfollow_to_delete = get_object_or_404(models.UserFollows, user=request.user,
+        userfollow_to_delete = get_object_or_404(models.UserFollows, user=request.user,
                                                      followed_user=user_id)
-            if userfollow_to_delete.exists():
-                userfollow_to_delete.delete()
-                return redirect('ticket/view_follow_users.html')
-            return redirect('home')
+        userfollow_to_delete.delete()
+        return redirect('followed_users')
+    else:
+        return redirect('home')
 
+@login_required
+def feed(request):
+    reviews = get_users_viewable_reviews(request)
+    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
+    tickets = get_users_viewable_tickets(request)
+    # returns queryset of tickets
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
+    # combine and sort the two types of posts
+    posts = sorted(
+    chain(reviews, tickets),
+    key=lambda post: post.time_created,
+    reverse=True
+    )
+    return render(request, 'feed.html', context={'posts': posts})
 
+def get_users_viewable_reviews(request):
+    reviews = models.Review.objects.select_related("ticket").filter(
+        Q(user__in=UserFollows.objects.filter(user=request.user).values("followed_user")) | Q(user=request.user)
+    )
+    return reviews
 
-
-
-
+def get(user):
+    reviews = Review.objects.filter(user=user)
+    return reviews
