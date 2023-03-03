@@ -181,6 +181,15 @@ def get_users_viewable_reviews(request):
     )
     return reviews
 
-def get(user):
-    reviews = Review.objects.filter(user=user)
-    return reviews
+def get_reviews_current_user(user):
+   return models.Review.objects.filter(user=user)
+
+def get_reviews_followed_users(user):
+   followed_list = models.UserFollows.objects.filter(user=user)
+   for user in followed_list:
+
+   return
+
+def fields(model):
+    return model._meta.fields
+
