@@ -14,6 +14,9 @@ class Ticket(models.Model):
     image = models.ImageField(blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.title}'
+
     IMAGE_MAX_SIZE = (400, 400)
 
     def resize_image(self):
@@ -36,6 +39,9 @@ class Review(models.Model):
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
+    #
+    # def __str__(self):
+    #     return f'{self.headline}'
 
 
 class UserFollows(models.Model):
