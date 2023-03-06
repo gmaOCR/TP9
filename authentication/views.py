@@ -4,7 +4,6 @@ from django.shortcuts import redirect, render
 
 from . import forms
 
-
 def signup_page(request):
     form = forms.SignupForm()
     if request.method == 'POST':
