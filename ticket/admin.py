@@ -3,10 +3,10 @@ from . import models
 
 # Register your models here.
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('title','user','description')
+    list_display = ('title','user','description','id')
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('headline','get_title','user')
+    list_display = ('headline','get_title','user','id')
 
     @admin.display(ordering='ticket__title', description='Titre du ticket')
     def get_title(self, Review):
