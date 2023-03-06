@@ -164,7 +164,6 @@ def feed(request):
     reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
     tickets = get_users_viewable_tickets(request)
-    # returns queryset of tickets
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
     # combine and sort the two types of posts
@@ -175,21 +174,16 @@ def feed(request):
     )
     return render(request, 'feed.html', context={'posts': posts})
 
-def get_users_viewable_reviews(request):
-    reviews = models.Review.objects.select_related("ticket").filter(
-        Q(user__in=UserFollows.objects.filter(user=request.user).values("followed_user")) | Q(user=request.user)
-    )
-    return reviews
+def  get_users_viewable_reviews(request):
+    return models.Review.objects.filter(Q(user=request.user) |
+                                        Q(user__followed_by__user=request.user) |
+                                        Q(ticket__user=request.user))
 
-def get_reviews_current_user(user):
-   return models.Review.objects.filter(user=user)
-
-def get_reviews_followed_users(user):
-   followed_list = models.UserFollows.objects.filter(user=user)
-   for user in followed_list:
-
-   return
-
+def get_users_viewable_tickets(request):
+    return models.Ticket.objects.filter(Q(user=request.user) |
+                                        Q(user__followed_by__user=request.user)
+                                        )
 def fields(model):
     return model._meta.fields
+
 
