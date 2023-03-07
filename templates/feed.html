@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<h2>Votre flux</h2>
+<div class="forms">
+<p><form action="{% url 'create_ticket' %}" method="get">
+    <button type="submit">Demander une critique</button></form></p>
+<p><form action="{% url 'create_ticket_and_review' %}" method="get">
+    <button type="submit">Créer une critique</button></form></p>
+</div>
+<div class="container">
+    {% for post in posts %}
+    <div class="post">
+        {% if post.content_type == 'TICKET' %}
+            {% include './ticket/view_ticket.html' %}
+        {% elif post.content_type == 'REVIEW' %}
+             {% include './ticket/view_review.html' %}
+    {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
