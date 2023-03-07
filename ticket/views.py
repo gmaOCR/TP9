@@ -14,16 +14,6 @@ from . import forms, models
 User = get_user_model()
 
 @login_required
-def home(request):
-    tickets = models.Ticket.objects.all()
-    reviews = models.Review.objects.all()
-    context = {
-        'tickets': tickets,
-        'reviews': reviews,
-    }
-    return render(request, 'ticket/home.html',  context=context)
-
-@login_required
 def create_ticket(request):
     ticket_form = forms.TicketForm()
     if request.method == 'POST':
@@ -32,7 +22,7 @@ def create_ticket(request):
             ticket = ticket_form.save(commit=False)
             ticket.user = request.user
             ticket.save()
-            return redirect('home')
+            return redirect('feed')
     context = {
         'ticket_form': ticket_form,
     }
@@ -53,13 +43,13 @@ def edit_ticket(request, ticket_id):
             edit_form = forms.TicketForm(request.POST, instance=ticket, files=request.FILES)
             if edit_form.is_valid():
                 edit_form.save()
-                return redirect('home')
+                return redirect('feed')
         if 'delete' in request.POST:
             # delete_form = forms.DeleteTicketForm(request.POST)
             delete_form = forms.DeleteForm(request.POST)
             if delete_form.is_valid():
                 ticket.delete()
-                return redirect('home')
+                return redirect('feed')
     context = {
         'edit_form': edit_form,
         'delete_form': delete_form,
@@ -81,7 +71,7 @@ def create_review_and_ticket(request):
             review.ticket = ticket
             review.user = request.user
             review.save()
-            return redirect('home')
+            return redirect('feed')
     context = {
         'review_form': review_form,
         'ticket_form': ticket_form,
@@ -99,7 +89,7 @@ def create_review(request, ticket_id):
             review.ticket = ticket
             review.user = request.user
             review.save()
-            return redirect('home')
+            return redirect('feed')
     context = {
         'review_form': review_form,
     }
@@ -115,12 +105,12 @@ def edit_review(request, review_id):
             edit_form = forms.ReviewForm(request.POST, instance=review, files=request.FILES)
             if edit_form.is_valid():
                 edit_form.save()
-                return redirect('home')
+                return redirect('feed')
         if 'delete' in request.POST:
             delete_form = forms.DeleteForm(request.POST)
             if delete_form.is_valid():
                 review.delete()
-                return redirect('home')
+                return redirect('feed')
     context = {
         'edit_form': edit_form,
         'delete_form': delete_form,
@@ -137,7 +127,7 @@ def follow_index(request):
                          )
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('feed')
     else:
         form = forms.AddUserToFollow(initial={'user': request.user})
     context = {
@@ -156,7 +146,7 @@ def unfollow(request, user_id):
         userfollow_to_delete.delete()
         return redirect('followed_users')
     else:
-        return redirect('home')
+        return redirect('feed')
 
 @login_required
 def feed(request):
