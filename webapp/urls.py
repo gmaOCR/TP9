@@ -24,7 +24,7 @@ urlpatterns = [
          name='password_change_done'
          ),
     path('signup/', authentication.views.signup_page, name='signup'),
-    path('home/', ticket.views.home, name='home'),
+    # path('home/', ticket.views.home, name='home'),
     path('ticket/<int:ticket_id>', ticket.views.view_ticket,
          name='view_ticket'),
     path('ticket/create/', ticket.views.create_ticket,
