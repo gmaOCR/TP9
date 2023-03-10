@@ -6,24 +6,26 @@ from .models import UserFollows
 
 User = get_user_model()
 
-
 CHOICES = (
-    ("1",1),
-    ("2",2),
-    ("3",3),
-    ("4",4),
-    ("5",5)
+    ("1", 1),
+    ("2", 2),
+    ("3", 3),
+    ("4", 4),
+    ("5", 5)
 )
+
 
 class TicketForm(forms.ModelForm):
     edit_ticket = forms.BooleanField(widget=forms.HiddenInput, initial=True)
 
     class Meta:
         model = models.Ticket
-        fields = ['title','description','image']
+        fields = ['title', 'description', 'image']
+
 
 class DeleteForm(forms.Form):
     delete = forms.BooleanField(widget=forms.HiddenInput, initial=True)
+
 
 class ReviewForm(forms.ModelForm):
     edit_review = forms.BooleanField(widget=forms.HiddenInput, initial=True)
@@ -31,12 +33,14 @@ class ReviewForm(forms.ModelForm):
 
     class Meta:
         model = models.Review
-        fields = ['headline','rating','body']
+        fields = ['headline', 'rating', 'body']
+
 
 elete_review = forms.BooleanField(widget=forms.HiddenInput, initial=True)
 
+
 class AddUserToFollow(forms.ModelForm):
-    username = forms.CharField(label='Suivre un utilisateur', required = True)
+    username = forms.CharField(label='Suivre un utilisateur', required=True)
 
     class Meta:
         model = models.UserFollows
@@ -51,15 +55,13 @@ class AddUserToFollow(forms.ModelForm):
         try:
             followed_user = User.objects.get(username=username)
         except User.DoesNotExist:
-            raise ValidationError("L'utilisateur %(username)s n'existe pas.", params = {'username': username})
+            raise ValidationError("L'utilisateur %(username)s n'existe pas.", params={'username': username})
+        if followed_user == user:
+            raise ValidationError("Vous ne pouvez pas vous ajouter en tant que follower.")
         if UserFollows.objects.filter(user=user, followed_user=followed_user).exists():
-            raise ValidationError("Vous suivez déjà %(username)s.", params = {'username': username})
+            raise ValidationError("Vous suivez déjà %(username)s.", params={'username': username})
         return followed_user
 
     def save(self, commit=True):
         self.instance.followed_user = self.cleaned_data['username']
         return super().save(commit=commit)
-
-
-
-

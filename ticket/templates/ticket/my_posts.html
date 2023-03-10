@@ -1,24 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+<h3>Mes posts et commentaires</h3>
+<div class="container">
 {% for post in posts %}
-        {% if post.user == user %}
-                <h4>Titre du ticket: {{ post.title }}</h4>
-                <p class="content">Vous avez posté une demande de critique</p>
-                <p class="content">Description: {{ post.description }}</p>
-                {% include "./ticket_img.html" %}
-                <p>Posté le: {{ post.time_created }}</p>
-                <section class="button">
-                <form class="content" action="{% url 'edit_ticket' post.id %}" method="get">
-                <button type="submit">Modifier le ticket</button></form>
-                {% if not post.user_has_reviewed %}
-                        <form class="content" action="{% url 'create_review' post.id %}" method="get">
-                        <button type="submit">Créer critique</button></form>
-                {% endif %}
-                </section>
+
+    {% if post.content_type == 'TICKET' and post.user == user %}
+    <div class="post">
+    {% include './view_ticket.html' %}
+    </div>
+        {% elif post.content_type == 'REVIEW' and post.ticket.user == user %}
+    <div class="post">
+        {% include './view_review.html' %}
+    </div>
         {% endif %}
-{% empty %}
-Aucun ticket à votre nom actuellement
-{% endfor %}
+            {% empty %}
+            Aucun éléments à votre nom actuellement
+
+    {% endfor %}
+</div>
 {% endblock content %}
 

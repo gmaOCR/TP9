@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-        <meta charset=UTF-8>
-        <title>LITReview</title>
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'app.css' %}">
-    </head>
-    <body>
-        <div class="sidebar">
-            <h1>LITReview</h1>
-            {% if user.is_authenticated %}
-                <p class="menu"> <a href="{% url 'feed' %}">Flux</a>
-                <a href="{% url 'my_posts' %}">Mes posts</a>
-                <a href="{% url 'followed_users' %}">Abonnements</a>
-                <a href="{% url 'logout' %}">Se déconnecter</a></p>
-            {% endif %}
-        </div>
-        <div class="main">
-            {% block content %}{% endblock content %}
-        </div>
-    </body>
+<meta charset=UTF-8>
+<title>LITReview</title>
+{% load static %}
+<link rel="stylesheet" href="{% static 'app.css' %}">
+</head>
+<body>
+    <div class="sidebar">
+        <h1>LITReview</h1>
+        {% if user.is_authenticated %}
+            <p class="menu"> <a href="{% url 'feed' %}">Flux</a>
+            <a href="{% url 'my_posts' %}">Mes posts</a>
+            <a href="{% url 'followed_users' %}">Abonnements</a>
+            <a href="{% url 'logout' %}">Se déconnecter</a></p>
+        {% endif %}
+    </div>
+    <div class="main">
+        {% block content %}{% endblock content %}
+    </div>
+</body>
 </html>
 

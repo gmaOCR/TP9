@@ -6,8 +6,7 @@
         {% csrf_token %}
         <button type="submit" >Sauvegarder</button>
     </form>
-    <hr>
-    <h3>Supprimer le ticket ?</h3>
+    <h2>Supprimer le ticket ?</h2>
     <form method="post" enctype="multipart/form-data">
         {{ delete_form.as_p }}
         {% csrf_token %}

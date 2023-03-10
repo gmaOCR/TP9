@@ -10,6 +10,7 @@ from . import forms, models
 
 User = get_user_model()
 
+
 @login_required
 def create_ticket(request):
     ticket_form = forms.TicketForm()
@@ -24,16 +25,6 @@ def create_ticket(request):
         'ticket_form': ticket_form,
     }
     return render(request, 'ticket/ticket_form.html', context=context)
-
-# @login_required
-# def view_ticket(request, ticket_id):
-#     ticket = get_object_or_404(models.Ticket, id=ticket_id)
-#     return render(request, 'ticket/view_ticket.html', {'ticket': ticket})
-
-@login_required
-def my_posts(request):
-    posts = feed(request)
-    return render(request, 'ticket/my_posts.html', context={'posts': posts})
 
 
 @login_required
@@ -59,27 +50,6 @@ def edit_ticket(request, ticket_id):
     }
     return render(request, 'ticket/edit_ticket.html', context=context)
 
-@login_required
-def create_review_and_ticket(request):
-    review_form = forms.ReviewForm()
-    ticket_form = forms.TicketForm()
-    if request.method == 'POST':
-        review_form = forms.ReviewForm(request.POST)
-        ticket_form = forms.TicketForm(request.POST, files=request.FILES)
-        if review_form.is_valid() or ticket_form.is_valid():
-            ticket = ticket_form.save(commit=False)
-            ticket.user = request.user
-            ticket.save()
-            review = review_form.save(commit=False)
-            review.ticket = ticket
-            review.user = request.user
-            review.save()
-            return redirect('feed')
-    context = {
-        'review_form': review_form,
-        'ticket_form': ticket_form,
-    }
-    return render(request, 'ticket/create_ticket_and_review.html', context=context)
 
 @login_required
 def create_review(request, ticket_id):
@@ -97,6 +67,7 @@ def create_review(request, ticket_id):
         'review_form': review_form,
     }
     return render(request, 'ticket/review_form.html', context=context)
+
 
 @login_required
 def edit_review(request, review_id):
@@ -120,17 +91,55 @@ def edit_review(request, review_id):
     }
     return render(request, 'ticket/edit_review.html', context=context)
 
+
+@login_required
+def create_review_and_ticket(request):
+    review_form = forms.ReviewForm()
+    ticket_form = forms.TicketForm()
+    if request.method == 'POST':
+        review_form = forms.ReviewForm(request.POST)
+        ticket_form = forms.TicketForm(request.POST, files=request.FILES)
+        if review_form.is_valid() or ticket_form.is_valid():
+            ticket = ticket_form.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
+            review = review_form.save(commit=False)
+            review.ticket = ticket
+            review.user = request.user
+            review.save()
+            return redirect('feed')
+    context = {
+        'review_form': review_form,
+        'ticket_form': ticket_form,
+    }
+    return render(request, 'ticket/create_ticket_and_review.html', context=context)
+
+
+@login_required
+def my_posts(request):
+    reviews = get_my_reviews(request)
+    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+    tickets = get_my_tickets(request)
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+    posts = sorted(
+        chain(reviews, tickets),
+        key=lambda post: post.time_created,
+        reverse=True
+    )
+    return render(request, 'ticket/my_posts.html', context={'posts': posts})
+
+
 @login_required
 def follow_index(request):
     followed_users = User.objects.filter(followed_by__user=request.user)
     followed_by = User.objects.filter(following__followed_user=request.user)
     if request.method == 'POST':
         form = forms.AddUserToFollow(
-            data= request.POST, initial={'user': request.user}
-                         )
+            data=request.POST, initial={'user': request.user}
+        )
         if form.is_valid():
             form.save()
-            return redirect('feed')
+            return redirect('followed_users')
     else:
         form = forms.AddUserToFollow(initial={'user': request.user})
     context = {
@@ -140,16 +149,18 @@ def follow_index(request):
     }
     return render(request, 'ticket/view_follow_users.html', context=context)
 
+
 @login_required
 @require_POST
 def unfollow(request, user_id):
     if request.method == 'POST':
         userfollow_to_delete = get_object_or_404(models.UserFollows, user=request.user,
-                                                     followed_user=user_id)
+                                                 followed_user=user_id)
         userfollow_to_delete.delete()
         return redirect('followed_users')
     else:
-        return redirect('feed')
+        return redirect('followed_users')
+
 
 @login_required
 def feed(request):
@@ -158,28 +169,33 @@ def feed(request):
 
     tickets = get_users_viewable_tickets(request)
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
-    user_review = models.Review.objects.filter(ticket=OuterRef('pk'),user=request.user)
+    user_review = models.Review.objects.filter(ticket=OuterRef('pk'), user=request.user)
     tickets = tickets.annotate(user_has_reviewed=Exists(user_review))
 
     # combine and sort the two types of posts
     posts = sorted(
-    chain(reviews, tickets),
-    key=lambda post: post.time_created,
-    reverse=True
+        chain(reviews, tickets),
+        key=lambda post: post.time_created,
+        reverse=True
     )
     return render(request, 'feed.html', context={'posts': posts})
+
 
 def get_users_viewable_reviews(request):
     return models.Review.objects.filter(Q(user=request.user) |
                                         Q(user__followed_by__user=request.user) |
                                         Q(ticket__user=request.user))
 
+
 def get_users_viewable_tickets(request):
     return models.Ticket.objects.filter(Q(user=request.user) |
                                         Q(user__followed_by__user=request.user)
                                         )
 
-def fields(model):
-    return model._meta.fields
+
+def get_my_reviews(request):
+    return models.Review.objects.filter(Q(user=request.user))
 
 
+def get_my_tickets(request):
+    return models.Ticket.objects.filter(Q(user=request.user))

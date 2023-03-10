@@ -18,7 +18,7 @@ h4 {
     border: .1rem solid black;
     padding: 5px;
     border-radius: 3px;
-    background-color: #cccccc;
+    background-color: #d0f0c0;
     margin: -3px;
 }
 h2 {
@@ -102,6 +102,23 @@ label {
     align-self: center;
 }
 
+.main > form > button {
+    width: 200px;
+    align-self: center;
+}
+
+.signup input {
+    width: 200px;
+    align-self: center;
+}
+
+.signup p {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    width: 840px;
+}
+
 .avatar {
     width: 80%;
     border-radius: 10%;
@@ -128,10 +145,15 @@ label {
     text-align: center;
     border: .3rem solid blue;
     border-radius: 10px;
+    margin: 5px;
 }
 
 .container .ticket {
     border: .1rem solid green;
+}
+
+span.empty {
+    all:inherit;
 }
 
 .container div {
