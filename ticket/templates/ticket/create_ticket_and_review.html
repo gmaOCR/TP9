@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Créer un ticket & une critique</h2>
+    <h4>Formulaire intégral (Ticket & Review)</h4>
     <form method="post" enctype="multipart/form-data">
-        <p>Ticket: article/livre</p>
+    <h2>Saisie du ticket</h2>
         {{ ticket_form.as_p }}
-        <p>Critique</p>
+    <h2>Saisie de la critique du ticket</h2>
         {{ review_form.as_p }}
         {% csrf_token %}
     </form>

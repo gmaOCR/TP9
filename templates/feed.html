@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-<h2>Votre flux</h2>
+<h3>Votre flux</h3>
 <div class="forms">
-<p><form action="{% url 'create_ticket' %}" method="get">
-    <button type="submit">Demander une critique</button></form></p>
-<p><form action="{% url 'create_ticket_and_review' %}" method="get">
-    <button type="submit">Créer une critique</button></form></p>
+<form action="{% url 'create_ticket' %}" method="get">
+    <button type="submit">Demander une critique</button></form>
+<form action="{% url 'create_ticket_and_review' %}" method="get">
+    <button type="submit">Créer une critique</button></form>
 </div>
 <div class="container">
     {% for post in posts %}
@@ -15,6 +15,8 @@
             {% include './ticket/view_ticket.html' %}
         {% elif post.content_type == 'REVIEW' %}
              {% include './ticket/view_review.html' %}
+        {% elif post.user == user %}
+             {% include './ticket/my_posts.html' %}
     {% endif %}
     </div>
     {% endfor %}

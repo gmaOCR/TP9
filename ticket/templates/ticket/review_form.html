@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
     {% block content %}
-<h2>Créer une critique</h2>
+<h4>Réagir avec une critique (Review)</h4>
 <form method="post" enctype="multipart/form-data">
     {{ review_form.as_p }}
     {% csrf_token %}

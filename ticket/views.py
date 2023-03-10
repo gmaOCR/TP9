@@ -1,13 +1,10 @@
 from itertools import chain
 from django.db import models
 from django.contrib.auth.decorators import login_required
-# from django.core.paginator import Paginator
-from django.db.models import Q
-# from django.forms import formset_factory
+from django.db.models import Q, OuterRef, Exists
 from django.db.models import CharField, Value
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-# from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from . import forms, models
 
@@ -26,12 +23,18 @@ def create_ticket(request):
     context = {
         'ticket_form': ticket_form,
     }
-    return render(request, 'ticket/create_ticket_post.html', context=context)
+    return render(request, 'ticket/ticket_form.html', context=context)
+
+# @login_required
+# def view_ticket(request, ticket_id):
+#     ticket = get_object_or_404(models.Ticket, id=ticket_id)
+#     return render(request, 'ticket/view_ticket.html', {'ticket': ticket})
 
 @login_required
-def view_ticket(request, ticket_id):
-    ticket = get_object_or_404(models.Ticket, id=ticket_id)
-    return render(request, 'ticket/view_ticket.html', {'ticket': ticket})
+def my_posts(request):
+    posts = feed(request)
+    return render(request, 'ticket/my_posts.html', context={'posts': posts})
+
 
 @login_required
 def edit_ticket(request, ticket_id):
@@ -93,7 +96,7 @@ def create_review(request, ticket_id):
     context = {
         'review_form': review_form,
     }
-    return render(request, 'ticket/create_review.html', context=context)
+    return render(request, 'ticket/review_form.html', context=context)
 
 @login_required
 def edit_review(request, review_id):
@@ -155,6 +158,8 @@ def feed(request):
 
     tickets = get_users_viewable_tickets(request)
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+    user_review = models.Review.objects.filter(ticket=OuterRef('pk'),user=request.user)
+    tickets = tickets.annotate(user_has_reviewed=Exists(user_review))
 
     # combine and sort the two types of posts
     posts = sorted(
@@ -164,7 +169,7 @@ def feed(request):
     )
     return render(request, 'feed.html', context={'posts': posts})
 
-def  get_users_viewable_reviews(request):
+def get_users_viewable_reviews(request):
     return models.Review.objects.filter(Q(user=request.user) |
                                         Q(user__followed_by__user=request.user) |
                                         Q(ticket__user=request.user))
@@ -173,6 +178,7 @@ def get_users_viewable_tickets(request):
     return models.Ticket.objects.filter(Q(user=request.user) |
                                         Q(user__followed_by__user=request.user)
                                         )
+
 def fields(model):
     return model._meta.fields
 

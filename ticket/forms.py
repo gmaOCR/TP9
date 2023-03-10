@@ -22,9 +22,6 @@ class TicketForm(forms.ModelForm):
         model = models.Ticket
         fields = ['title','description','image']
 
-# class DeleteTicketForm(forms.Form):
-#     delete_ticket = forms.BooleanField(widget=forms.HiddenInput, initial=True)
-
 class DeleteForm(forms.Form):
     delete = forms.BooleanField(widget=forms.HiddenInput, initial=True)
 
@@ -36,8 +33,7 @@ class ReviewForm(forms.ModelForm):
         model = models.Review
         fields = ['headline','rating','body']
 
-# class DeleteReviewForm(forms.Form):
-#     delete_review = forms.BooleanField(widget=forms.HiddenInput, initial=True)
+elete_review = forms.BooleanField(widget=forms.HiddenInput, initial=True)
 
 class AddUserToFollow(forms.ModelForm):
     username = forms.CharField(label='Suivre un utilisateur', required = True)

@@ -1,10 +1,12 @@
 {% load static %}
 <h4>Titre de la critique: {{ post.headline }} - Note: {{ post.rating }} *</h4>
+
+<p class="content">Critique: {{ post.body }}</p>
+<p class="content">Posté le: {{ post.time_created }}</p>
 {% if post.user == user%}
-        <a href="{% url 'edit_review' post.id %}">[Modifier]</a>
+        <form class="content" action="{% url 'edit_review' post.id %}" method="get">
+        <button type="submit">Modifier le ticket</button></form>
 {% endif %}
-<p>Critique: {{ post.body }}</p>
-<p>Posté le: {{ post.time_created }}</p>
 <div class="ticket">
         <h4>{{ post.ticket.title }}</h4>
         {% if post.ticket.user == user %}

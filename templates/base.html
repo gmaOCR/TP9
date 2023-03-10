@@ -10,9 +10,10 @@
         <div class="sidebar">
             <h1>LITReview</h1>
             {% if user.is_authenticated %}
-                <p><a href="{% url 'feed' %}">Accueil</a></p>
-                <p><a href="{% url 'followed_users' %}">Abonnements</a></p>
-                <p><a href="{% url 'logout' %}">Se déconnecter</a></p>
+                <p class="menu"> <a href="{% url 'feed' %}">Flux</a>
+                <a href="{% url 'my_posts' %}">Mes posts</a>
+                <a href="{% url 'followed_users' %}">Abonnements</a>
+                <a href="{% url 'logout' %}">Se déconnecter</a></p>
             {% endif %}
         </div>
         <div class="main">
