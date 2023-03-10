@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import (
     LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView)
-from django.urls import path
+from django.urls import include, path
 
 import authentication.views
 import ticket.views
@@ -24,12 +24,19 @@ urlpatterns = [
          name='password_change_done'
          ),
     path('signup/', authentication.views.signup_page, name='signup'),
-    path('home/', ticket.views.home, name='home'),
-    path('ticket/<int:ticket_id>', ticket.views.view_ticket,
-         name='view_ticket'),
+    # path('home/', ticket.views.home, name='home'),
+    # path('ticket/<int:ticket_id>', ticket.views.view_ticket,
+    #      name='view_ticket'),
+    path('ticket/my_posts/', ticket.views.my_posts, name='my_posts'),
     path('ticket/create/', ticket.views.create_ticket,
          name='create_ticket'),
     path('ticket/<int:ticket_id>/edit', ticket.views.edit_ticket, name='edit_ticket'),
+    path('ticket_and_review/create/', ticket.views.create_review_and_ticket, name='create_ticket_and_review'),
+    path('review/<int:review_id>/edit', ticket.views.edit_review, name='edit_review'),
+    path('ticket/<int:ticket_id>/review/create/', ticket.views.create_review, name='create_review'),
+    path('followed-users/', ticket.views.follow_index, name='followed_users'),
+    path('followed-users/<int:user_id>/unfollow', ticket.views.unfollow, name='unfollow_user'),
+    path('feed/', ticket.views.feed, name='feed'),
 ]
 
 if settings.DEBUG:

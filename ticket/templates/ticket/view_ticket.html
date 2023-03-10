@@ -1,12 +1,22 @@
-{% extends 'base.html' %}
 {% load static %}
-{% block content %}
-    <h2>{{ ticket.title }}</h2>
-        {% if perms.ticket.change_ticket %}
-            <p><a href="{% url 'edit_ticket' ticket.id %}">Modifier le ticket</a></p>
-        {% endif %}
-    <p>Ticket posté par: {{ ticket.user }}</p>
-    <p>{% include "./ticket_img.html" %}</p>
-    <p>{{ ticket.description }}</p>
-    <p>{{ ticket.time_created }}</p>
-{% endblock content %}
+<h4>Titre du ticket: {{ post.title }}</h4>
+{% if post.user == user %}
+        <p class="content">Vous avez posté une demande de critique</p>
+{% else %}
+        <p class="content">{{post.user}} a posté une demande de critique</p>
+{% endif %}
+<p class="content">Description: {{ post.description }}</p>
+{% include "./ticket_img.html" %}
+<section class="button">
+{% if post.user == user%}
+        <form class="content" action="{% url 'edit_ticket' post.id %}" method="get">
+        <button type="submit">Modifier le ticket</button></form>
+{% endif %}
+{% if not post.user_has_reviewed %}
+        <form class="content" action="{% url 'create_review' post.id %}" method="get">
+        <button type="submit">Créer critique</button></form>
+{% endif %}
+</section>
+<p>Posté le: {{ post.time_created }}</p>
+
+

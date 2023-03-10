@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h4>Formulaire intégral (Ticket & Review)</h4>
+    <form method="post" enctype="multipart/form-data">
+    <h2>Saisie du ticket</h2>
+        {{ ticket_form.as_p }}
+    <h2>Saisie de la critique du ticket</h2>
+        {{ review_form.as_p }}
+        {% csrf_token %}
+    </form>
+{% endblock content %}
