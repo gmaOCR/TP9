@@ -36,9 +36,6 @@ class ReviewForm(forms.ModelForm):
         fields = ['headline', 'rating', 'body']
 
 
-elete_review = forms.BooleanField(widget=forms.HiddenInput, initial=True)
-
-
 class AddUserToFollow(forms.ModelForm):
     username = forms.CharField(label='Suivre un utilisateur', required=True)
 

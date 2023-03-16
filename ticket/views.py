@@ -39,7 +39,6 @@ def edit_ticket(request, ticket_id):
                 edit_form.save()
                 return redirect('feed')
         if 'delete' in request.POST:
-            # delete_form = forms.DeleteTicketForm(request.POST)
             delete_form = forms.DeleteForm(request.POST)
             if delete_form.is_valid():
                 ticket.delete()

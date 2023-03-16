@@ -1,12 +1,11 @@
+import authentication.views
+import ticket.views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import (
     LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView)
-from django.urls import include, path
-
-import authentication.views
-import ticket.views
+from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,9 +23,6 @@ urlpatterns = [
          name='password_change_done'
          ),
     path('signup/', authentication.views.signup_page, name='signup'),
-    # path('home/', ticket.views.home, name='home'),
-    # path('ticket/<int:ticket_id>', ticket.views.view_ticket,
-    #      name='view_ticket'),
     path('ticket/my_posts/', ticket.views.my_posts, name='my_posts'),
     path('ticket/create/', ticket.views.create_ticket,
          name='create_ticket'),
