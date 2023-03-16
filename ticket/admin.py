@@ -11,8 +11,8 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = ('headline', 'get_title', 'user', 'id')
 
     @admin.display(ordering='ticket__title', description='Titre du ticket')
-    def get_title(self, Review):
-        return Review.ticket.title
+    def get_title(self, review):
+        return review.ticket.title
 
 
 class UFAdmin(admin.ModelAdmin):

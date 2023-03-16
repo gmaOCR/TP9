@@ -1,8 +1,4 @@
 from PIL import Image
-from django.core.files.base import ContentFile
-from io import BytesIO
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
