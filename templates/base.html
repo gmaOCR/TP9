@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns="http://www.w3.org/1999/html">
 <head>
 <meta charset=UTF-8>
 <title>LITReview</title>
@@ -14,6 +14,7 @@
             <a href="{% url 'my_posts' %}">Mes posts</a>
             <a href="{% url 'followed_users' %}">Abonnements</a>
             <a href="{% url 'logout' %}">Se déconnecter</a></p>
+            <span id="username">Logué en tant que: {{user.username}}</span>
         {% endif %}
     </div>
     <div class="main">
