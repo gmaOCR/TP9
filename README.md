@@ -16,11 +16,8 @@ env\Scripts\activate
 ```
 Installez les packages:
 ```bash
+cd TP9
 pip install -r requirements.txt
-```
-Allez dans le répertoire:
-```bash
-cd webapp
 ```
 Appliquez les migrations si besoin:
 ```bash
