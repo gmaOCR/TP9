@@ -1,5 +1,4 @@
 from itertools import chain
-from django.db import models
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, OuterRef, Exists
 from django.db.models import CharField, Value

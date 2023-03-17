@@ -138,8 +138,11 @@ label {
 }
 
 .forms button{
-    transform: scale(1.5);
+
+    display: inline-block;
+    margin: 5px;
 }
+
 
 .container {
     text-align: center;
