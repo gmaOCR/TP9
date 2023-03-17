@@ -4,19 +4,17 @@
 <h3>Mes posts et commentaires</h3>
 <div class="container">
 {% for post in posts %}
-
     {% if post.content_type == 'TICKET' and post.user == user %}
     <div class="post">
     {% include './view_ticket.html' %}
     </div>
-        {% elif post.content_type == 'REVIEW' and post.ticket.user == user %}
+    {% elif post.content_type == 'REVIEW' or post.ticket.user == user %}
     <div class="post">
-        {% include './view_review.html' %}
+    {% include './view_review.html' %}
     </div>
-        {% endif %}
-            {% empty %}
-            Aucun éléments à votre nom actuellement
-
+    {% endif %}
+        {% empty %}
+        Aucun éléments à votre nom actuellement
     {% endfor %}
 </div>
 {% endblock content %}
