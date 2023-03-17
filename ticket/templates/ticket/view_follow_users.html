@@ -15,6 +15,11 @@
             <button type="submit" >Désabonner</button>
         </form>
         </li>
+    {% endfor %}
+<h2>Liste des abonnés</h2>
+    {% for user in followed_by %}
+        <li>{{ user.username }}
+        </li>
 {% empty %}
 Aucun utilisateur n'est suivi actuellement
     {% endfor %}
