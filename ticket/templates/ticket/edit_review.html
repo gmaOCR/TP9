@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Modifier la critique</h2>
+<div class="container">
+    <div class="ticket">
+    {% include './view_ticket.html' %}
+    </div>
+    <h4>Modifier la critique</h4>
     <form method="post" enctype="multipart/form-data">
         {{ edit_form.as_p }}
         {% csrf_token %}
         <button type="submit" >Sauvegarder</button>
     </form>
-    <h2>Supprimer la critique ?</h2>
+    <h4>Supprimer la critique ?</h4>
     <form method="post" enctype="multipart/form-data">
         {{ delete_form }}
         {% csrf_token %}

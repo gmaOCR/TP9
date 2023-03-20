@@ -19,7 +19,7 @@ h4 {
     padding: 5px;
     border-radius: 3px;
     background-color: #d0f0c0;
-    margin: -3px;
+    margin: 5px;
 }
 h2 {
     font-size: 20px;
@@ -42,6 +42,15 @@ label {
     justify-content: center;
 }
 
+td {
+  border: 1px solid black;
+
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+}
 
 
 /* The sidebar menu */
@@ -72,11 +81,11 @@ label {
 
 /* When you mouse over the navigation links, change their color */
 .sidebar a:hover {
-    color: #f1f1f1;
+    color: #16dd2c;
 }
 
 .menu {
-    width: 25%;
+    width: 35%;
     justify-content: space-between;
     display: flex;
     align-content: flex-end;
@@ -149,14 +158,11 @@ label {
     border: .3rem solid blue;
     border-radius: 10px;
     margin: 5px;
+    width:800px;
 }
 
 .container .ticket {
     border: .1rem solid green;
-}
-
-span.empty {
-    all:inherit;
 }
 
 .container div {
@@ -164,6 +170,24 @@ span.empty {
     border-radius: 10px;
     margin: 10px;
     padding: 10px;
+}
+
+.container #id_rating  {
+    border: unset;
+}
+
+.container #id_rating div {
+    border: unset;
+}
+
+.container > form {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+span.empty {
+    all:inherit;
 }
 
 .post {
@@ -182,10 +206,12 @@ span.empty {
     line-height: 0.2em
 }
 
-#id_rating {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+#id_rating  {
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   padding: 5px;
+   margin: 5px;
 }
 
 #username {
@@ -197,7 +223,15 @@ span.empty {
 }
 
 #image-clear_id {
-    position: absolute;
-    right: 51.5%;
-    bottom: -1%;
+position: relative;
+right: 21%;
+top: 18px;
+}
+
+#td_button {
+width: 25%
+}
+
+#ticket_button {
+width: 100px;
 }

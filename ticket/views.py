@@ -45,6 +45,7 @@ def edit_ticket(request, ticket_id):
     context = {
         'edit_form': edit_form,
         'delete_form': delete_form,
+        'post': ticket,
     }
     return render(request, 'ticket/edit_ticket.html', context=context)
 
@@ -62,6 +63,7 @@ def create_review(request, ticket_id):
             review.save()
             return redirect('feed')
     context = {
+        'post': ticket,
         'review_form': review_form,
     }
     return render(request, 'ticket/review_form.html', context=context)
@@ -72,6 +74,7 @@ def edit_review(request, review_id):
     review = get_object_or_404(models.Review, id=review_id)
     edit_form = forms.ReviewForm(instance=review)
     delete_form = forms.DeleteForm()
+    ticket = review.ticket
     if request.method == 'POST':
         if 'edit_review' in request.POST:
             edit_form = forms.ReviewForm(request.POST, instance=review, files=request.FILES)
@@ -86,6 +89,7 @@ def edit_review(request, review_id):
     context = {
         'edit_form': edit_form,
         'delete_form': delete_form,
+        'post': ticket,
     }
     return render(request, 'ticket/edit_review.html', context=context)
 

@@ -7,16 +7,6 @@
 {% endif %}
 <p class="content">Description: {{ post.description }}</p>
 {% include "./ticket_img.html" %}
-<section class="button">
-{% if post.user == user%}
-        <form class="content" action="{% url 'edit_ticket' post.id %}" method="get">
-        <button type="submit">Modifier le ticket</button></form>
-{% endif %}
-{% if not post.user_has_reviewed %}
-        <form class="content" action="{% url 'create_review' post.id %}" method="get">
-        <button type="submit">Créer critique</button></form>
-{% endif %}
-</section>
 <p>Posté le: {{ post.time_created }} par {{ post.user}}  </p>
 
 

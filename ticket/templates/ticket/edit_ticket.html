@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Modifier le ticket</h2>
-    <form method="post" enctype="multipart/form-data">
-        {{ edit_form.as_p }}
-        {% csrf_token %}
-        <button type="submit" >Sauvegarder</button>
-    </form>
-    <h2>Supprimer le ticket ?</h2>
-    <form method="post" enctype="multipart/form-data">
-        {{ delete_form.as_p }}
-        {% csrf_token %}
-        <button type="submit" >Supprimer</button>
-    </form>
+<div class="container">
+<h4>Modifier le ticket</h4>
+<form method="post" enctype="multipart/form-data">
+    {{ edit_form.as_p }}
+    {% csrf_token %}
+    {% include './ticket_img.html' %}
+    <button id="ticket_button" type="submit" >Sauvegarder</button>
+</form>
+<h4>Supprimer le ticket ?</h4>
+<form method="post" enctype="multipart/form-data">
+    {{ delete_form.as_p }}
+    {% csrf_token %}
+    <button type="submit" >Supprimer</button>
+</form>
+</div>
 {% endblock content %}

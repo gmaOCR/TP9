@@ -10,10 +10,21 @@
 </div>
 <div class="container">
     {% for post in posts %}
-
 <div class="post">
         {% if post.content_type == 'TICKET' %}
             {% include './ticket/view_ticket.html' %}
+        {% if post.user == user%}
+        <section class="button">
+        <form class="content" action="{% url 'edit_ticket' post.id %}" method="get">
+                <button type="submit">Modifier le ticket</button></form>
+        {% endif %}
+        </section>
+        {% if not post.user_has_reviewed %}
+        <section class="button">
+            <form class="content" action="{% url 'create_review' post.id %}" method="get">
+            <button type="submit">Créer critique</button></form>
+        </section>
+        {% endif %}
         {% elif post.content_type == 'REVIEW' %}
              {% include './ticket/view_review.html' %}
         {% elif post.user == user %}

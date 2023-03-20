@@ -3,8 +3,10 @@
 <p class="content">Critique: {{ post.body }}</p>
 <p class="content">Posté le: {{ post.time_created }} par {{ post.user }}</p>
 {% if post.user == user %}
+        <section class="button">
         <form class="content" action="{% url 'edit_review' post.id %}" method="get">
         <button type="submit">Modifier la critique</button></form>
+        </section>
 {% endif %}
 <div class="ticket">
 <h4>Titre du ticket: {{ post.ticket.title }}</h4>

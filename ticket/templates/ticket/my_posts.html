@@ -7,6 +7,12 @@
     {% if post.content_type == 'TICKET' and post.user == user %}
     <div class="post">
     {% include './view_ticket.html' %}
+    {% if post.user == user%}
+    <section class="button">
+    <form class="content" action="{% url 'edit_ticket' post.id %}" method="get">
+    <button type="submit">Modifier le ticket</button></form>
+    </section>
+    {% endif %}
     </div>
     {% elif post.content_type == 'REVIEW' or post.ticket.user == user %}
     <div class="post">

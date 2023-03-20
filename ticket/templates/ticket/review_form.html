@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
     {% block content %}
-<h4>Réagir avec une critique (Review)</h4>
+<div class="container">
+    <h4>Réagir avec une critique (Review)</h4>
+<div class="post">
+{% include './view_ticket.html' %}
+</div>
 <form method="post" enctype="multipart/form-data">
     {{ review_form.as_p }}
     {% csrf_token %}
+    <section class="button">
     <button type="submit" >Envoyer</button>
+    </section>
 </form>
+    </div>
 {% endblock content %}
