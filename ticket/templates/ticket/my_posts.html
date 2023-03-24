@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-<h3>Mes posts et commentaires</h3>
+
 <div class="container">
+    <h5>Mes posts et commentaires</h5>
 {% for post in posts %}
+
     {% if post.content_type == 'TICKET' and post.user == user %}
     <div class="post">
     {% include './view_ticket.html' %}

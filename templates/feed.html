@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-<h3>Votre flux</h3>
 <div class="forms">
 <form action="{% url 'create_ticket' %}" method="get">
     <button type="submit">Demander une critique</button></form>
@@ -9,6 +8,7 @@
     <button type="submit">Créer une critique</button></form>
 </div>
 <div class="container">
+    <h5>Votre flux</h5>
     {% for post in posts %}
 <div class="post">
         {% if post.content_type == 'TICKET' %}
@@ -31,9 +31,8 @@
              {% include './ticket/my_posts.html' %}
     {% endif %}
     </div>
-
     {% empty %}
-    <span class="empty">Aucun éléments à afficher pour le moment</span>
+    <div class="empty">Aucun éléments à afficher pour le moment</div>
 {% endfor %}
 </div>
 {% endblock content %}
